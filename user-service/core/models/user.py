@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+from sqlalchemy import Column
 
 
 @dataclass
 class User:
-    id: int
-    telegram_nick: str
+    id = Column()
+    username: str

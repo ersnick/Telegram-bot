@@ -6,7 +6,7 @@ create table users
 
 create table student_group
 (
-    id    int primary key,
+    id    serial primary key,
     title varchar(10) not null
 );
 

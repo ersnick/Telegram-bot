@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
+from core.repositories.db.connections import get_db_connection
 
 
 def main():
-    pass
+    get_db_connection()
 
 
 if __name__ == '__main__':
