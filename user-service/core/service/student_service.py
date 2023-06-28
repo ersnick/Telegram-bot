@@ -1,5 +1,9 @@
+import logging
+
 from ..repositories.student_repository import StudentRepository
 from ..models.student import Student
+
+logger = logging.getLogger()
 
 
 class StudentService:

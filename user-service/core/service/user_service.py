@@ -1,5 +1,6 @@
 from ..repositories.user_repository import UserRepository
 from ..models.user import User
+from ..models.statement import Statement
 
 
 class UserService:
@@ -9,10 +10,16 @@ class UserService:
     def get_all_users(self) -> list[User]:
         pass
 
-    def register(self, user: User) -> None:
+    def save_user(self, user: User):
         pass
 
-    def accept_student(self, user_id: int) -> None:
+    def register(self, statement: Statement) -> None:
+        pass
+
+    def accept_student(self, statement: Statement) -> None:
+        pass
+
+    def dismiss_user(self, statement_id: int) -> None:
         pass
 
     def create_manager(self, user_id: int) -> None:

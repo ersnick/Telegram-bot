@@ -7,8 +7,7 @@ from core.repositories.db.connections import get_db_connection
 
 
 def main():
-    logging.getLogger().info('test')
-    # get_db_connection()
+    get_db_connection()
 
 
 def __config_logger():

@@ -3,6 +3,7 @@ from core.models.group import Group
 from core.models.role import Role
 from core.models.student import Student
 from core.models.user import User
+from core.models.statement import Statement
 from dotenv import dotenv_values
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
@@ -34,5 +35,6 @@ def create_db(engine: Engine):
     user = User()
     role = Role()
     student = Student()
+    statement = Statement()
     base = getBase()
     base.metadata.create_all(engine)
