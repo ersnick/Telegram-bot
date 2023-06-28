@@ -1,9 +1,9 @@
 from core.models.base import getBase
 from core.models.group import Group
 from core.models.role import Role
+from core.models.statement import Statement
 from core.models.student import Student
 from core.models.user import User
-from core.models.statement import Statement
 from dotenv import dotenv_values
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
@@ -15,7 +15,7 @@ config = dotenv_values()
 def get_db_connection() -> Session:
     engine = get_engine()
     create_db(engine)
-    return Session(bind=engine)
+    return Session(bind=engine, autocommit=True)
 
 
 def get_engine() -> Engine:

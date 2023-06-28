@@ -1,6 +1,6 @@
-from ..repositories.user_repository import UserRepository
-from ..models.user import User
 from ..models.statement import Statement
+from ..models.user import User
+from ..repositories.user_repository import UserRepository
 
 
 class UserService:
@@ -11,7 +11,7 @@ class UserService:
         pass
 
     def save_user(self, user: User):
-        pass
+        self.__repository.save_user(user)
 
     def register(self, statement: Statement) -> None:
         pass
