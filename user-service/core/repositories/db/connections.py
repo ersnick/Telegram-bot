@@ -1,7 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
 
-from core.models.base import getBase
 from core.models.group import Group
 from core.models.role import Role
 from core.models.statement import Statement
@@ -12,13 +11,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
+from .base import Base
+
 config = dotenv_values()
 logger = logging.getLogger()
 
 
 class DBConnection(ABC):
     def __init__(self) -> None:
-        self.__base = getBase()
+        self.__base = Base
 
     @abstractmethod
     def session(self) -> Session:

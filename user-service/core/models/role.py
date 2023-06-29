@@ -3,9 +3,7 @@ from dataclasses import dataclass
 from sqlalchemy import Column, INTEGER, VARCHAR
 from sqlalchemy.orm import relationship
 
-from .base import getBase
-
-Base = getBase()
+from ..repositories.db.base import Base
 
 
 @dataclass

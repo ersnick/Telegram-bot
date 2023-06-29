@@ -2,9 +2,7 @@ from dataclasses import dataclass
 
 from sqlalchemy import Column, INTEGER, VARCHAR, BOOLEAN, ForeignKey
 
-from .base import getBase
-
-Base = getBase()
+from ..repositories.db.base import Base
 
 
 @dataclass
