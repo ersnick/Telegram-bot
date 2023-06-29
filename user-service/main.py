@@ -3,13 +3,14 @@ from logging import INFO
 
 from dotenv import load_dotenv
 
-from core.deps import get_user_service
+from core.deps import ComponentsContainer
 from core.service.user_service import UserService
 from core.models.statement import Statement
 
 
 def main():
-    user_service: UserService = get_user_service()
+    ioc = ComponentsContainer()
+    user_service: UserService = ioc.user_service
     # statement = Statement(id=1,
     #                       user_id=1007,
     #                       name='test name',
@@ -17,7 +18,9 @@ def main():
     #                       patronymic='test patronymic',
     #                       group_id=99999)
     # user_service.accept_student(statement)
-    # user_service.register(statement)
+
+    user = user_service.get_user_by_username('un')
+    print(f'{user.id} {user.username}')
 
 
 def __config_logger():

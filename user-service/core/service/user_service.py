@@ -67,10 +67,16 @@ class UserServiceImpl(UserService):
         self.__statement_service.save_statement(statement)
 
     def accept_student(self, statement: Statement) -> None:
+        saved_statement: Statement = self.__statement_service.get_statement_by_user_id(statement.user_id)
+        if saved_statement.is_checked:
+            raise Exception('Statement already checked')
+
         statement.is_checked = True
         self.__statement_service.check_statement(statement_id=statement.id)
+
         student = self.__student_service.convert_statement_to_student(statement=statement)
         self.__student_service.save_student(student=student)
+
         role = self.__role_service.get_role_by_name('STUDENT')
         self.update_user_role(user_id=student.user_id, role_id=role.id)
 

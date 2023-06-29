@@ -19,7 +19,7 @@ class StatementService(ABC):
         pass
 
     @abstractmethod
-    def get_statement_by_use_id(self, user_id: int) -> Statement:
+    def get_statement_by_user_id(self, user_id: int) -> Statement:
         pass
 
     @abstractmethod
@@ -40,7 +40,7 @@ class StatementServiceImpl(StatementService):
     def get_not_checked_statement(self) -> list[Statement]:
         return self.__repository.get_not_checked_statement()
 
-    def get_statement_by_use_id(self, user_id: int) -> Statement:
+    def get_statement_by_user_id(self, user_id: int) -> Statement:
         return self.__repository.get_statement_by_user_id(user_id=user_id)
 
     def check_statement(self, statement_id: int) -> None:

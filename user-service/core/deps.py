@@ -1,42 +1,48 @@
 from .repositories.db.connections import DBConnection, get_postgres_connection
+from .repositories.role_repository import RoleRepository, RoleRepositoryImpl
 from .repositories.statement_repository import StatementRepository, StatementRepositoryImpl
 from .repositories.student_repository import StudentRepository, StudentRepositoryImpl
 from .repositories.user_repository import UserRepository, UserRepositoryImpl
+from .service.role_service import RoleService, RoleServiceImpl
 from .service.statement_service import StatementService, StatementServiceImpl
 from .service.student_service import StudentService, StudentServiceImpl
 from .service.user_service import UserService, UserServiceImpl
-from .service.role_service import RoleService, RoleServiceImpl
-from .repositories.role_repository import RoleRepository, RoleRepositoryImpl
-
-connection: DBConnection = get_postgres_connection()
-
-role_repository: RoleRepository = RoleRepositoryImpl(session=connection.session())
-role_service: RoleService = RoleServiceImpl(repository=role_repository)
-
-statement_repository: StatementRepository = StatementRepositoryImpl(session=connection.session())
-statement_service: StatementService = StatementServiceImpl(repository=statement_repository)
-
-student_repository: StudentRepository = StudentRepositoryImpl(session=connection.session())
-student_service: StudentService = StudentServiceImpl(repository=student_repository)
-
-user_repository: UserRepository = UserRepositoryImpl(session=connection.session())
-user_service: UserService = UserServiceImpl(repository=user_repository,
-                                            statement_service=statement_service,
-                                            student_service=student_service,
-                                            role_service=role_service)
 
 
-def get_db_connections() -> DBConnection:
-    return connection
+class ComponentsContainer:
+    __connection: DBConnection = get_postgres_connection()
 
+    __role_repository: RoleRepository = RoleRepositoryImpl(session=__connection.session())
+    __role_service: RoleService = RoleServiceImpl(repository=__role_repository)
 
-def get_user_service() -> UserService:
-    return user_service
+    __statement_repository: StatementRepository = StatementRepositoryImpl(session=__connection.session())
+    __statement_service: StatementService = StatementServiceImpl(repository=__statement_repository)
 
+    __student_repository: StudentRepository = StudentRepositoryImpl(session=__connection.session())
+    __student_service: StudentService = StudentServiceImpl(repository=__student_repository)
 
-def get_user_repository() -> UserRepository:
-    return user_repository
+    __user_repository: UserRepository = UserRepositoryImpl(session=__connection.session())
+    __user_service: UserService = UserServiceImpl(repository=__user_repository,
+                                                  statement_service=__statement_service,
+                                                  student_service=__student_service,
+                                                  role_service=__role_service)
 
+    @property
+    def get_db_connections(self) -> DBConnection:
+        return self.__connection
 
-def get_statement_repository() -> StatementRepository:
-    return statement_repository
+    @property
+    def user_service(self) -> UserService:
+        return self.__user_service
+
+    @property
+    def statement_service(self) -> StatementService:
+        return self.__statement_service
+
+    @property
+    def role_service(self) -> RoleService:
+        return self.__role_service
+
+    @property
+    def student_service(self) -> StudentService:
+        return self.__student_service
