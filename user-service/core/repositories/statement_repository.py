@@ -26,7 +26,9 @@ class StatementRepositoryImpl(StatementRepository):
         self.__session = session
 
     def save_statement(self, statement: Statement):
-        pass
+        with self.__session.begin():
+            self.__session.add(statement)
+            self.__session.commit()
 
     def get_all_statement(self):
         pass
