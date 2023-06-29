@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
+from .statement_service import StatementService
 from ..models.statement import Statement
 from ..models.user import User
-from ..repositories.statement_repository import StatementRepository
 from ..repositories.user_repository import UserRepository
 
 
@@ -37,21 +37,21 @@ class UserService(ABC):
 
 
 class UserServiceImpl(UserService):
-    def __init__(self, user_repository: UserRepository, statement_repository: StatementRepository) -> None:
-        self.__user_repository = user_repository
-        self.__statement_repository = statement_repository
+    def __init__(self, repository: UserRepository, statement_service: StatementService) -> None:
+        self.__repository = repository
+        self.__statement_service = statement_service
 
     def get_all_users(self) -> list[User]:
-        pass
+        return self.__repository.get_all_user()
 
     def save_user(self, user: User):
-        self.__user_repository.save_user(user)
+        self.__repository.save_user(user)
 
     def register(self, statement: Statement) -> None:
-        pass
+        self.__statement_service.save_statement(statement)
 
     def accept_student(self, statement: Statement) -> None:
-        pass
+        statement.is_checked = True
 
     def dismiss_user(self, statement_id: int) -> None:
         pass

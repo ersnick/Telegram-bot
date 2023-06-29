@@ -25,6 +25,10 @@ class UserRepository(ABC):
     def get_user_by_username(self, username: str):
         pass
 
+    @abstractmethod
+    def update_user_role(self, user_id: int, role_id):
+        pass
+
 
 class UserRepositoryImpl(UserRepository):
     def __init__(self, session: Session) -> None:
@@ -46,3 +50,6 @@ class UserRepositoryImpl(UserRepository):
         with self.__session.begin():
             self.__session.add(user)
             self.__session.commit()
+
+    def update_user_role(self, user_id: int, role_id):
+        pass
