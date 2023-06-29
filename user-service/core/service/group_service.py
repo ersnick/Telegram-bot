@@ -18,5 +18,5 @@ class GroupService:
     def delete_group(self, group_id: int) -> None:
         pass
 
-    def get_group_by_title(self, title: str = '') -> list[Group]:
+    def get_group_by_title(self, title: str = '') -> Group:
         pass

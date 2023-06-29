@@ -1,6 +1,7 @@
 import logging
 
 from ..repositories.student_repository import StudentRepository
+from .group_service import GroupService
 from ..models.student import Student
 from ..models.statement import Statement
 from abc import ABC, abstractmethod
@@ -18,11 +19,11 @@ class StudentService(ABC):
         pass
 
     @abstractmethod
-    def update_student(self, update_student: Student):
+    def update_student(self, update_student: Student) -> None:
         pass
 
     @abstractmethod
-    def delete_student_by_id(self, student_id: int):
+    def delete_student_by_id(self, student_id: int) -> None:
         pass
 
     @abstractmethod
@@ -42,20 +43,29 @@ class StudentService(ABC):
 
 
 class StudentServiceImpl(StudentService):
-    def __init__(self, repository: StudentRepository) -> None:
+    def __init__(self, repository: StudentRepository, group_service: GroupService) -> None:
         self.__repository = repository
+        self.__group_service = group_service
 
     def get_all_students(self) -> list[Student]:
-        pass
+        return self.__repository.get_all_students()
 
-    def update_student(self, update_student: Student):
-        pass
+    def update_student(self, update_student: Student) -> None:
+        self.__repository.update_student(student=update_student)
 
-    def delete_student_by_id(self, student_id: int):
-        pass
+    def delete_student_by_id(self, student_id: int) -> None:
+        self.__repository.delete_student(student_id=student_id)
 
-    def get_students_by_filter(self, fcs: str = '', group_name: str = '') -> list[Student]:
-        pass
+    def get_students_by_filter(self,
+                               name: str = '',
+                               surname: str = '',
+                               patronymic: str = '',
+                               group_name: str = '') -> list[Student]:
+        group = self.__group_service.get_group_by_title(group_name)
+        return self.__repository.get_student_by_filter(name=name,
+                                                       surname=surname,
+                                                       patronymic=patronymic,
+                                                       group_id=group.id)
 
     def save_student(self, student: Student) -> None:
         self.__repository.save_student(student=student)

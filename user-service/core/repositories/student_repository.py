@@ -23,7 +23,11 @@ class StudentRepository(ABC):
         pass
 
     @abstractmethod
-    def get_student_by_filter(self, student: Student) -> list[Student]:
+    def get_student_by_filter(self,
+                              name: str,
+                              surname: str,
+                              patronymic: str,
+                              group_id: int) -> list[Student]:
         pass
 
 
@@ -45,7 +49,7 @@ class StudentRepositoryImpl(StudentRepository):
 
     def update_student(self, student: Student) -> None:
         with self.__session.begin():
-            self.__session.add(student)
+            self.__session.query(Student).filter(Student.id == student.id).update(student)
             self.__session.commit()
 
     def delete_student(self, student_id: int) -> None:
@@ -54,12 +58,17 @@ class StudentRepositoryImpl(StudentRepository):
             self.__session.delete(student)
             self.__session.commit()
 
-    def get_student_by_filter(self, student: Student) -> list[Student]:
+    def get_student_by_filter(self,
+                              name: str,
+                              surname: str,
+                              patronymic: str,
+                              group_id: int) -> list[Student]:
         with self.__session.begin():
             students = self.__session.query(Student) \
-                .filter(or_(Student.name == student.name
-                            or Student.patronymic == student.patronymic
-                            or Student.surname == student.surname)).all()
+                .filter(or_(Student.name == name,
+                            Student.patronymic == patronymic,
+                            Student.surname == surname,
+                            Student.group_id == group_id)).all()
 
             self.__session.commit()
         return students
