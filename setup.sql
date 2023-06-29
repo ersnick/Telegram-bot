@@ -1,16 +1,22 @@
+create table roles
+(
+    id   serial primary key,
+    name varchar(20) not null
+);
+
 create table users
 (
     id       int primary key,
     username varchar(35)
 );
 
-create table student_group
+create table groups
 (
     id    serial primary key,
     title varchar(10) not null
 );
 
-create table student
+create table students
 (
     id         serial primary key,
     user_id    int,
@@ -27,21 +33,28 @@ create table student
             references student_group (id)
 );
 
-create table role
+create table statements
 (
-    id   serial primary key,
-    name varchar(20) not null
-);
+    id         serial primary key,
+    user_id    int,
+    name       varchar(30) not null,
+    surname    varchar(30) not null,
+    patronymic varchar(30) not null,
+    group_id   int,
 
-create table user_role
-(
-    role_id int,
-    user_id int,
-
-    constraint fk_user_role
+    constraint fk_statement_user
         foreign key (user_id)
             references users (id),
-    constraint fk_role
-        foreign key (role_id)
-            references role (id)
+    constraint fk_statement_group
+        foreign key (group_id)
+            references student_group (id)
 );
+
+insert into roles(name)
+VALUES ('USER');
+insert into roles(name)
+VALUES ('STUDENT');
+insert into roles(name)
+VALUES ('MANAGER');
+insert into roles(name)
+VALUES ('MAIN_ADMIN');

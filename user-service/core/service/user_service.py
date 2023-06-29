@@ -84,10 +84,12 @@ class UserServiceImpl(UserService):
         self.__statement_service.check_statement(statement_id=statement_id)
 
     def create_manager(self, user_id: int) -> None:
-        pass
+        role = self.__role_service.get_role_by_name('MANAGER')
+        self.update_user_role(user_id=user_id, role_id=role.id)
 
     def delete_manager(self, user_id: int) -> None:
-        pass
+        role = self.__role_service.get_role_by_name('USER')
+        self.update_user_role(user_id=user_id, role_id=role.id)
 
     def update_user_role(self, user_id: int, role_id: int) -> None:
         self.__repository.update_user_role(user_id=user_id, role_id=role_id)

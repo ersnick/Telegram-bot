@@ -19,9 +19,6 @@ def main():
     #                       group_id=99999)
     # user_service.accept_student(statement)
 
-    user = user_service.get_user_by_username('un')
-    print(f'{user.id} {user.username}')
-
 
 def __config_logger():
     file_log = logging.FileHandler('user-service.log')
