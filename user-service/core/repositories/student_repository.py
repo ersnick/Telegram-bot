@@ -65,9 +65,9 @@ class StudentRepositoryImpl(StudentRepository):
                               group_id: int) -> list[Student]:
         with self.__session.begin():
             students = self.__session.query(Student) \
-                .filter(or_(Student.name == name,
-                            Student.patronymic == patronymic,
-                            Student.surname == surname,
+                .filter(or_(Student.name.like(f'%{name}%'),
+                            Student.patronymic.like(f'%{patronymic}%'),
+                            Student.surname.like(f'%{surname}%'),
                             Student.group_id == group_id)).all()
 
             self.__session.commit()
