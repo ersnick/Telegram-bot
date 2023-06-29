@@ -3,15 +3,12 @@ from logging import INFO
 
 from dotenv import load_dotenv
 
-from core.repositories.db.connections import get_db_connection
-from core.repositories.user_repository import UserRepository
+from core.deps import get_user_service
 from core.service.user_service import UserService
 
 
 def main():
-    session = get_db_connection()
-    repo = UserRepository(session=session)
-    service = UserService(repository=repo)
+    user_service: UserService = get_user_service()
 
 
 def __config_logger():
