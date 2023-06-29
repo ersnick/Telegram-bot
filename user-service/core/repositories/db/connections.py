@@ -2,6 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 
 from core.models.group import Group
+from core.models.manager import Manager
 from core.models.role import Role
 from core.models.statement import Statement
 from core.models.student import Student
@@ -35,6 +36,7 @@ class DBConnection(ABC):
         Role()
         Student()
         Statement()
+        Manager()
         self.__base.metadata.create_all(engine)
 
 

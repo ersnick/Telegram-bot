@@ -54,7 +54,7 @@ class UserRepositoryImpl(UserRepository):
 
     def get_user_by_username(self, username: str) -> User:
         with self.__session.begin():
-            user = self.__session.query(User).filter(User.username == username).one()
+            user = self.__session.query(User).filter(User.login == username).one()
             self.__session.commit()
         return user
 

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from .manager_service import ManagerService
 from .role_service import RoleService
 from .statement_service import StatementService
 from .student_service import StudentService
@@ -30,11 +31,11 @@ class UserService(ABC):
         pass
 
     @abstractmethod
-    def create_manager(self, user_id: int) -> None:
+    def create_manager(self, user_id: int = 0, username: str = '', password: str = '') -> None:
         pass
 
     @abstractmethod
-    def delete_manager(self, user_id: int) -> None:
+    def delete_manager_by_id(self, user_id: int) -> None:
         pass
 
     @abstractmethod
@@ -51,11 +52,13 @@ class UserServiceImpl(UserService):
                  repository: UserRepository,
                  statement_service: StatementService,
                  student_service: StudentService,
-                 role_service: RoleService) -> None:
+                 role_service: RoleService,
+                 manager_service: ManagerService) -> None:
         self.__repository = repository
         self.__statement_service = statement_service
         self.__student_service = student_service
         self.__role_service = role_service
+        self.__manager_service = manager_service
 
     def get_all_users(self) -> list[User]:
         return self.__repository.get_all_user()
@@ -83,11 +86,29 @@ class UserServiceImpl(UserService):
     def dismiss_user(self, statement_id: int) -> None:
         self.__statement_service.check_statement(statement_id=statement_id)
 
-    def create_manager(self, user_id: int) -> None:
+    def create_manager(self, user_id: int = 0, username: str = '', password: str = '') -> None:
+        user: User
+        if user_id == 0:
+            user = self.__repository.get_user_by_id(user_id=user_id)
+        elif username == '':
+            user = self.get_user_by_username(username=username)
+        else:
+            raise Exception('user_id and username is empty')
+
+        self.__manager_service.create_manager(user=user, password=password)
         role = self.__role_service.get_role_by_name('MANAGER')
         self.update_user_role(user_id=user_id, role_id=role.id)
 
-    def delete_manager(self, user_id: int) -> None:
+    def delete_manager_by_id(self, user_id: int = 0, username: str = '') -> None:
+        user: User
+        if user_id == 0:
+            user = self.__repository.get_user_by_id(user_id=user_id)
+        elif username == '':
+            user = self.get_user_by_username(username=username)
+        else:
+            raise Exception('user_id and username is empty')
+
+        self.__manager_service.delete_manager(user_id=user.id)
         role = self.__role_service.get_role_by_name('USER')
         self.update_user_role(user_id=user_id, role_id=role.id)
 
