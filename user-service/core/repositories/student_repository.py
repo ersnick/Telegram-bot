@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from core.models.student import Student
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 
@@ -36,9 +37,8 @@ class StudentRepositoryImpl(StudentRepository):
             self.__session.commit()
 
     def get_all_students(self) -> list[Student]:
-        students: list[Student] = []
         with self.__session.begin():
-            students = self.__session.query(Student).get
+            students = self.__session.query(Student).all()
             self.__session.commit()
 
         return students
@@ -55,10 +55,11 @@ class StudentRepositoryImpl(StudentRepository):
             self.__session.commit()
 
     def get_student_by_filter(self, student: Student) -> list[Student]:
-        students: list[Student] = []
         with self.__session.begin():
-            students = self.__session.query(Student).filter(Student.name == student.name
-                                                 or Student.patronymic == student.patronymic
-                                                 or Student.surname == student.surname).all()
+            students = self.__session.query(Student) \
+                .filter(or_(Student.name == student.name
+                            or Student.patronymic == student.patronymic
+                            or Student.surname == student.surname)).all()
+
             self.__session.commit()
         return students
