@@ -5,10 +5,19 @@ from dotenv import load_dotenv
 
 from core.deps import get_user_service
 from core.service.user_service import UserService
+from core.models.statement import Statement
 
 
 def main():
     user_service: UserService = get_user_service()
+    # statement = Statement(id=1,
+    #                       user_id=1007,
+    #                       name='test name',
+    #                       surname='test surname',
+    #                       patronymic='test patronymic',
+    #                       group_id=99999)
+    # user_service.accept_student(statement)
+    # user_service.register(statement)
 
 
 def __config_logger():

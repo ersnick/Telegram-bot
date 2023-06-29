@@ -22,6 +22,10 @@ class StatementService(ABC):
     def get_statement_by_use_id(self, user_id: int) -> Statement:
         pass
 
+    @abstractmethod
+    def check_statement(self, statement_id: int) -> None:
+        pass
+
 
 class StatementServiceImpl(StatementService):
     def __init__(self, repository: StatementRepository) -> None:
@@ -38,3 +42,6 @@ class StatementServiceImpl(StatementService):
 
     def get_statement_by_use_id(self, user_id: int) -> Statement:
         return self.__repository.get_statement_by_user_id(user_id=user_id)
+
+    def check_statement(self, statement_id: int) -> None:
+        self.__repository.check_statement(statement_id=statement_id)

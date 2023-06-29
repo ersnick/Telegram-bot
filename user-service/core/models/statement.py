@@ -16,5 +16,5 @@ class Statement(Base):
     name = Column(VARCHAR(35), nullable=False)
     surname = Column(VARCHAR(35), nullable=False)
     patronymic = Column(VARCHAR(35), nullable=False)
-    group = Column(VARCHAR(10), nullable=False)
-    is_checked = Column(BOOLEAN, nullable=False)
+    group_id = Column(INTEGER, ForeignKey('groups.id'))
+    is_checked = Column(BOOLEAN, nullable=False, default=False)

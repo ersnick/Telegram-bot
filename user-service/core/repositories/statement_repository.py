@@ -20,6 +20,10 @@ class StatementRepository(ABC):
     def get_statement_by_user_id(self, user_id: int) -> Statement:
         pass
 
+    @abstractmethod
+    def check_statement(self, statement_id: int) -> None:
+        pass
+
 
 class StatementRepositoryImpl(StatementRepository):
     def __init__(self, session: Session) -> None:
@@ -47,3 +51,7 @@ class StatementRepositoryImpl(StatementRepository):
             statement = self.__session.query(Statement).filter(Statement.user_id == user_id).one()
             self.__session.commit()
         return statement
+
+    def check_statement(self, statement_id: int) -> None:
+        with self.__session.begin():
+            self.__session.query(Statement).filter(Statement.id == statement_id).update({'is_checked': True})
