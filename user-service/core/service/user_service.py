@@ -4,6 +4,7 @@ from .manager_service import ManagerService
 from .role_service import RoleService
 from .statement_service import StatementService
 from .student_service import StudentService
+from ..exceptions.illegal_argument_exception import IllegalArgumentException
 from ..models.statement import Statement
 from ..models.user import User
 from ..repositories.user_repository import UserRepository
@@ -64,6 +65,8 @@ class UserServiceImpl(UserService):
         return self.__repository.get_all_user()
 
     def save_user(self, user: User) -> None:
+        user_role = self.__role_service.get_role_by_name('USER')
+        user.role_id = user_role.id
         self.__repository.save_user(user)
 
     def register(self, statement: Statement) -> None:
@@ -72,7 +75,7 @@ class UserServiceImpl(UserService):
     def accept_student(self, statement: Statement) -> None:
         saved_statement: Statement = self.__statement_service.get_statement_by_user_id(statement.user_id)
         if saved_statement.is_checked:
-            raise Exception('Statement already checked')
+            raise IllegalArgumentException(message='Statement already checked')
 
         statement.is_checked = True
         self.__statement_service.check_statement(statement_id=statement.id)
@@ -93,7 +96,7 @@ class UserServiceImpl(UserService):
         elif username == '':
             user = self.get_user_by_username(username=username)
         else:
-            raise Exception('user_id and username is empty')
+            raise IllegalArgumentException(message='user_id and username is empty')
 
         self.__manager_service.create_manager(user=user, password=password)
         role = self.__role_service.get_role_by_name('MANAGER')
@@ -106,7 +109,7 @@ class UserServiceImpl(UserService):
         elif username == '':
             user = self.get_user_by_username(username=username)
         else:
-            raise Exception('user_id and username is empty')
+            raise IllegalArgumentException(message='user_id and username is empty')
 
         self.__manager_service.delete_manager(user_id=user.id)
         role = self.__role_service.get_role_by_name('USER')

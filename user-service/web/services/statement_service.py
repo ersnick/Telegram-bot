@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from core.deps import ComponentsContainer
+from core.exceptions.illegal_argument_exception import IllegalArgumentException
 from core.models import statement
 
 from ..models.statement_dto import Statement
@@ -43,7 +44,7 @@ class StatementServiceImpl(StatementService):
     def accept_statement(self, accept_statement: Statement) -> None:
         saved_statement = self.__statement_service.get_statement_by_id(statement_id=accept_statement.id)
         if saved_statement.is_checked:
-            raise Exception('Statement already checked')
+            raise IllegalArgumentException(message='Statement already checked')
         group = self.__group_service.get_group_by_title(title=accept_statement.group)
         saved_statement = statement.Statement(id=accept_statement.id,
                                               user_id=saved_statement.user_id,
@@ -56,7 +57,7 @@ class StatementServiceImpl(StatementService):
     def dismiss_statement(self, statement_id: int) -> None:
         saved_statement = self.__statement_service.get_statement_by_id(statement_id=statement_id)
         if saved_statement.is_checked:
-            raise Exception('Statement already checked')
+            raise IllegalArgumentException(message='Statement already checked')
         self.__user_service.dismiss_user(statement_id=statement_id)
 
     def __inject_groups(self, statements) -> list[Statement]:
