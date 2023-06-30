@@ -19,7 +19,7 @@ create table groups
 create table students
 (
     id         serial primary key,
-    user_id    int,
+    user_id    int unique,
     name       varchar(30) not null,
     surname    varchar(30) not null,
     patronymic varchar(30) not null,

@@ -81,7 +81,7 @@ class UserServiceImpl(UserService):
         self.__student_service.save_student(student=student)
 
         role = self.__role_service.get_role_by_name('STUDENT')
-        self.update_user_role(user_id=student.user_id, role_id=role.id)
+        self.update_user_role(user_id=saved_statement.user_id, role_id=role.id)
 
     def dismiss_user(self, statement_id: int) -> None:
         self.__statement_service.check_statement(statement_id=statement_id)

@@ -10,7 +10,7 @@ class Student(Base):
     __tablename__ = 'students'
 
     id = Column(INTEGER, autoincrement=True, primary_key=True)
-    user_id = Column(INTEGER, ForeignKey('users.id'))
+    user_id = Column(INTEGER, ForeignKey('users.id'), unique=True)
     name = Column(VARCHAR(35), nullable=False)
     surname = Column(VARCHAR(35), nullable=False)
     patronymic = Column(VARCHAR(35), nullable=False)

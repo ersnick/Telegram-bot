@@ -36,39 +36,37 @@ class StudentRepositoryImpl(StudentRepository):
         self.__session = session
 
     def save_student(self, student: Student) -> None:
-        with self.__session.begin():
-            self.__session.add(student)
-            self.__session.commit()
+        self.__session.add(student)
+        self.__session.commit()
+        self.__session.close()
 
     def get_all_students(self) -> list[Student]:
-        with self.__session.begin():
-            students = self.__session.query(Student).all()
-            self.__session.commit()
+        students = self.__session.query(Student).all()
+        self.__session.close()
 
         return students
 
     def update_student(self, student: Student) -> None:
-        with self.__session.begin():
-            self.__session.query(Student).filter(Student.id == student.id).update(student)
-            self.__session.commit()
+        self.__session.query(Student).filter(Student.id == student.id).update(student)
+        self.__session.commit()
+        self.__session.close()
 
     def delete_student(self, student_id: int) -> None:
-        with self.__session.begin():
-            student = self.__session.query(Student).filter(Student.id == student_id).one()
-            self.__session.delete(student)
-            self.__session.commit()
+        student = self.__session.query(Student).filter(Student.id == student_id).one()
+        self.__session.delete(student)
+        self.__session.commit()
+        self.__session.close()
 
     def get_student_by_filter(self,
                               name: str,
                               surname: str,
                               patronymic: str,
                               group_id: int) -> list[Student]:
-        with self.__session.begin():
-            students = self.__session.query(Student) \
-                .filter(or_(Student.name.like(f'%{name}%'),
-                            Student.patronymic.like(f'%{patronymic}%'),
-                            Student.surname.like(f'%{surname}%'),
-                            Student.group_id == group_id)).all()
+        students = self.__session.query(Student) \
+            .filter(or_(Student.name.like(f'%{name}%'),
+                        Student.patronymic.like(f'%{patronymic}%'),
+                        Student.surname.like(f'%{surname}%'),
+                        Student.group_id == group_id)).all()
 
-            self.__session.commit()
+        self.__session.close()
         return students

@@ -13,7 +13,7 @@ class UserService(ABC):
 
 class UserServiceImpl(UserService):
     def __init__(self) -> None:
-        self.__user_service = ioc.statement_service
+        self.__user_service = ioc.user_service
         self.__role_service = ioc.role_service
 
     def get_all_users(self) -> list[User]:

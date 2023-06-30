@@ -23,4 +23,4 @@ def get_all_statements(filter: str = ''):
 @router.post('/{statement_id}/accept')
 def accept_statement(statement_id: int, statement: Statement):
     statement.id = statement_id
-    statement_service.accept_statement(statement=statement)
+    statement_service.accept_statement(accept_statement=statement)
