@@ -15,13 +15,13 @@ app.include_router(router=statement_router, tags=['Statement router'])
 
 
 @app.exception_handler(IllegalArgumentException)
-def runtime_exception_handler(e: IllegalArgumentException) -> Response:
+def runtime_exception_handler(request: Request, e: IllegalArgumentException) -> Response:
     return JSONResponse(status_code=400, content={'message': e.message})
 
 
 @app.exception_handler(Exception)
-def other_exception_handler(e: Exception) -> Response:
-    return JSONResponse(status_code=400, content='')
+def other_exception_handler(request: Request, e: Exception) -> Response:
+    return JSONResponse(status_code=500, content={'message': 'server error'})
 
 
 def main():

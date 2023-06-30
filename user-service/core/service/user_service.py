@@ -47,6 +47,10 @@ class UserService(ABC):
     def get_user_by_username(self, username: str) -> User:
         pass
 
+    @abstractmethod
+    def get_user_by_id(self, user_id: int) -> User:
+        pass
+
 
 class UserServiceImpl(UserService):
     def __init__(self,
@@ -92,7 +96,7 @@ class UserServiceImpl(UserService):
     def create_manager(self, user_id: int = 0, username: str = '', password: str = '') -> None:
         user: User
         if user_id == 0:
-            user = self.__repository.get_user_by_id(user_id=user_id)
+            user = self.get_user_by_id(user_id=user_id)
         elif username == '':
             user = self.get_user_by_username(username=username)
         else:
@@ -105,7 +109,7 @@ class UserServiceImpl(UserService):
     def delete_manager_by_id(self, user_id: int = 0, username: str = '') -> None:
         user: User
         if user_id == 0:
-            user = self.__repository.get_user_by_id(user_id=user_id)
+            user = self.get_user_by_id(user_id=user_id)
         elif username == '':
             user = self.get_user_by_username(username=username)
         else:
@@ -120,3 +124,6 @@ class UserServiceImpl(UserService):
 
     def get_user_by_username(self, username: str) -> User:
         return self.__repository.get_user_by_username(username=username)
+
+    def get_user_by_id(self, user_id: int) -> User:
+        return self.__repository.get_user_by_id(user_id=user_id)
