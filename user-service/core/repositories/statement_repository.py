@@ -24,6 +24,10 @@ class StatementRepository(ABC):
     def check_statement(self, statement_id: int) -> None:
         pass
 
+    @abstractmethod
+    def get_statement_by_id(self, statement_id: int) -> Statement:
+        pass
+
 
 class StatementRepositoryImpl(StatementRepository):
     def __init__(self, session: Session) -> None:
@@ -35,9 +39,9 @@ class StatementRepositoryImpl(StatementRepository):
             self.__session.commit()
 
     def get_all_statement(self) -> list[Statement]:
-        with self.__session.begin():
-            statements = self.__session.query(Statement).all()
-            self.__session.commit()
+        # with self.__session.begin():
+        statements = self.__session.query(Statement).all()
+        self.__session.close()
         return statements
 
     def get_not_checked_statement(self) -> list[Statement]:
@@ -55,3 +59,8 @@ class StatementRepositoryImpl(StatementRepository):
     def check_statement(self, statement_id: int) -> None:
         with self.__session.begin():
             self.__session.query(Statement).filter(Statement.id == statement_id).update({'is_checked': True})
+
+    def get_statement_by_id(self, statement_id: int) -> Statement:
+        statement = self.__session.query(Statement).filter(Statement.id == statement_id).one()
+        self.__session.close()
+        return statement

@@ -29,6 +29,10 @@ class GroupService(ABC):
     def get_group_by_filter(self, title: str = '') -> list[Group]:
         pass
 
+    @abstractmethod
+    def get_group_by_id(self, group_id: int) -> Group:
+        pass
+
 
 class GroupServiceImpl(GroupService):
     def __init__(self, repository: GroupRepository) -> None:
@@ -51,3 +55,6 @@ class GroupServiceImpl(GroupService):
 
     def get_group_by_filter(self, title: str = '') -> list[Group]:
         return self.__repository.get_group_by_filter(title=title)
+
+    def get_group_by_id(self, group_id: int) -> Group:
+        return self.__repository.get_group_by_id(group_id=group_id)

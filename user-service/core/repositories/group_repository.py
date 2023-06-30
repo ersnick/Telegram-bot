@@ -28,6 +28,10 @@ class GroupRepository(ABC):
     def update_group(self, group: Group) -> None:
         pass
 
+    @abstractmethod
+    def get_group_by_id(self, group_id: int) -> Group:
+        pass
+
 
 class GroupRepositoryImpl(GroupRepository):
 
@@ -66,3 +70,8 @@ class GroupRepositoryImpl(GroupRepository):
         with self.__session.begin():
             self.__session.query(Group).filter(Group.id == group.id).update(group)
             self.__session.commit()
+
+    def get_group_by_id(self, group_id: int) -> Group:
+        group = self.__session.query(Group).filter(Group.id == group_id).one()
+        self.__session.close()
+        return group

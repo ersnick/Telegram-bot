@@ -1,23 +1,19 @@
 import logging
 from logging import INFO
 
+import uvicorn
 from dotenv import load_dotenv
+from fastapi import FastAPI
+from web.controllers.user_routing import router as user_router
+from web.controllers.statement_router import router as statement_router
 
-from core.deps import ComponentsContainer
-from core.service.user_service import UserService
-from core.models.statement import Statement
+app = FastAPI()
+app.include_router(router=user_router, tags=['User router'])
+app.include_router(router=statement_router, tags=['Statement router'])
 
 
 def main():
-    ioc = ComponentsContainer()
-    user_service: UserService = ioc.user_service
-    # statement = Statement(id=1,
-    #                       user_id=1007,
-    #                       name='test name',
-    #                       surname='test surname',
-    #                       patronymic='test patronymic',
-    #                       group_id=99999)
-    # user_service.accept_student(statement)
+    uvicorn.run(app=app, port=8082, reload=False)
 
 
 def __config_logger():

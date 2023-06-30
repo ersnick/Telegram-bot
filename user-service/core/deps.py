@@ -58,3 +58,7 @@ class ComponentsContainer:
     @property
     def student_service(self) -> StudentService:
         return self.__student_service
+
+    @property
+    def group_service(self) -> GroupService:
+        return self.__group_service

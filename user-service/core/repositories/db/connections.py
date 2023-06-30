@@ -1,5 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
+from typing import Literal
 
 from core.models.group import Group
 from core.models.manager import Manager
@@ -10,7 +11,7 @@ from core.models.user import User
 from dotenv import dotenv_values
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker, scoped_session
 
 from .base import Base
 
@@ -59,7 +60,10 @@ class PostgresConnection(DBConnection):
     def __get_db_connection(self) -> Session:
         engine = self._get_engine()
         self._create_db(engine=engine)
-        return Session(bind=engine, autocommit=True)
+        Session = scoped_session(sessionmaker(bind=engine,
+                                              autocommit=False,
+                                              autoflush=False))
+        return Session()
 
     def session(self):
         return self.__session

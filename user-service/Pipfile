@@ -9,6 +9,7 @@ python-dotenv = "*"
 fastapi = "*"
 sqlalchemy = "*"
 bcrypt = "*"
+uvicorn = "*"
 
 [dev-packages]
 

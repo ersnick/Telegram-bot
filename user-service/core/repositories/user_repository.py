@@ -41,9 +41,8 @@ class UserRepositoryImpl(UserRepository):
         return user
 
     def get_all_user(self) -> list[User]:
-        with self.__session.begin():
-            users = self.__session.query(User)
-            self.__session.commit()
+        users = self.__session.query(User).all()
+        self.__session.close()
         return users
 
     def get_user_by_id(self, user_id: int) -> User:
