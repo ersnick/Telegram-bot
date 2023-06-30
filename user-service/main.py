@@ -7,11 +7,13 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from web.controllers.user_routing import router as user_router
 from web.controllers.statement_router import router as statement_router
+from web.controllers.student_router import router as student_router
 from core.exceptions.illegal_argument_exception import IllegalArgumentException
 
 app = FastAPI()
 app.include_router(router=user_router, tags=['User router'])
 app.include_router(router=statement_router, tags=['Statement router'])
+app.include_router(router=student_router, tags=['Student router'])
 
 
 @app.exception_handler(IllegalArgumentException)

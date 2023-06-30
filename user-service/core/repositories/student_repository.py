@@ -23,11 +23,15 @@ class StudentRepository(ABC):
         pass
 
     @abstractmethod
-    def get_student_by_filter(self,
-                              name: str,
-                              surname: str,
-                              patronymic: str,
-                              group_id: int) -> list[Student]:
+    def get_student_by_id(self, student_id: int) -> Student:
+        pass
+
+    @abstractmethod
+    def get_students_by_filter(self,
+                               name: str,
+                               surname: str,
+                               patronymic: str,
+                               group_id: int) -> list[Student]:
         pass
 
 
@@ -47,7 +51,12 @@ class StudentRepositoryImpl(StudentRepository):
         return students
 
     def update_student(self, student: Student) -> None:
-        self.__session.query(Student).filter(Student.id == student.id).update(student)
+        self.__session.query(Student).filter(Student.id == student.id).update({'id': student.id,
+                                                                               'user_id': student.user_id,
+                                                                               'name': student.name,
+                                                                               'surname': student.surname,
+                                                                               'patronymic': student.patronymic,
+                                                                               'group_id': student.group_id})
         self.__session.commit()
         self.__session.close()
 
@@ -57,11 +66,16 @@ class StudentRepositoryImpl(StudentRepository):
         self.__session.commit()
         self.__session.close()
 
-    def get_student_by_filter(self,
-                              name: str,
-                              surname: str,
-                              patronymic: str,
-                              group_id: int) -> list[Student]:
+    def get_student_by_id(self, student_id: int) -> Student:
+        student = self.__session.query(Student).filter(Student.id == student_id).one()
+        self.__session.close()
+        return student
+
+    def get_students_by_filter(self,
+                               name: str,
+                               surname: str,
+                               patronymic: str,
+                               group_id: int) -> list[Student]:
         students = self.__session.query(Student) \
             .filter(or_(Student.name.like(f'%{name}%'),
                         Student.patronymic.like(f'%{patronymic}%'),

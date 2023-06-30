@@ -30,6 +30,10 @@ class StudentService(ABC):
     def get_students_by_filter(self, fcs: str = '', group_name: str = '') -> list[Student]:
         pass
 
+    @abstractmethod
+    def get_student_by_id(self, student_id: int) -> Student:
+        pass
+
     @staticmethod
     def convert_statement_to_student(statement: Statement) -> Student:
         student = Student()
@@ -43,7 +47,9 @@ class StudentService(ABC):
 
 
 class StudentServiceImpl(StudentService):
-    def __init__(self, repository: StudentRepository, group_service: GroupService) -> None:
+    def __init__(self,
+                 repository: StudentRepository,
+                 group_service: GroupService) -> None:
         self.__repository = repository
         self.__group_service = group_service
 
@@ -62,10 +68,13 @@ class StudentServiceImpl(StudentService):
                                patronymic: str = '',
                                group_name: str = '') -> list[Student]:
         group = self.__group_service.get_group_by_title(group_name)
-        return self.__repository.get_student_by_filter(name=name,
-                                                       surname=surname,
-                                                       patronymic=patronymic,
-                                                       group_id=group.id)
+        return self.__repository.get_students_by_filter(name=name,
+                                                        surname=surname,
+                                                        patronymic=patronymic,
+                                                        group_id=group.id)
 
     def save_student(self, student: Student) -> None:
         self.__repository.save_student(student=student)
+
+    def get_student_by_id(self, student_id: int) -> Student:
+        return self.__repository.get_student_by_id(student_id=student_id)

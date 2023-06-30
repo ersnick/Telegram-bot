@@ -40,7 +40,7 @@ class UserService(ABC):
         pass
 
     @abstractmethod
-    def update_user_role(self, user_id: int, role_id: int) -> None:
+    def update_user_role(self, user_id: int, role_name: str) -> None:
         pass
 
     @abstractmethod
@@ -49,6 +49,10 @@ class UserService(ABC):
 
     @abstractmethod
     def get_user_by_id(self, user_id: int) -> User:
+        pass
+
+    @abstractmethod
+    def delete_student_by_id(self, student_id: int) -> None:
         pass
 
 
@@ -87,8 +91,7 @@ class UserServiceImpl(UserService):
         student = self.__student_service.convert_statement_to_student(statement=statement)
         self.__student_service.save_student(student=student)
 
-        role = self.__role_service.get_role_by_name('STUDENT')
-        self.update_user_role(user_id=saved_statement.user_id, role_id=role.id)
+        self.update_user_role(user_id=saved_statement.user_id, role_name='STUDENT')
 
     def dismiss_user(self, statement_id: int) -> None:
         self.__statement_service.check_statement(statement_id=statement_id)
@@ -103,8 +106,7 @@ class UserServiceImpl(UserService):
             raise IllegalArgumentException(message='user_id and username is empty')
 
         self.__manager_service.create_manager(user=user, password=password)
-        role = self.__role_service.get_role_by_name('MANAGER')
-        self.update_user_role(user_id=user_id, role_id=role.id)
+        self.update_user_role(user_id=user_id, role_name='MANAGER')
 
     def delete_manager_by_id(self, user_id: int = 0, username: str = '') -> None:
         user: User
@@ -116,14 +118,19 @@ class UserServiceImpl(UserService):
             raise IllegalArgumentException(message='user_id and username is empty')
 
         self.__manager_service.delete_manager(user_id=user.id)
-        role = self.__role_service.get_role_by_name('USER')
-        self.update_user_role(user_id=user_id, role_id=role.id)
+        self.update_user_role(user_id=user_id, role_name='USER')
 
-    def update_user_role(self, user_id: int, role_id: int) -> None:
-        self.__repository.update_user_role(user_id=user_id, role_id=role_id)
+    def update_user_role(self, user_id: int, role_name: str) -> None:
+        role = self.__role_service.get_role_by_name(name=role_name)
+        self.__repository.update_user_role(user_id=user_id, role_id=role.id)
 
     def get_user_by_username(self, username: str) -> User:
         return self.__repository.get_user_by_username(username=username)
 
     def get_user_by_id(self, user_id: int) -> User:
         return self.__repository.get_user_by_id(user_id=user_id)
+
+    def delete_student_by_id(self, student_id: int) -> None:
+        student = self.__student_service.get_student_by_id(student_id=student_id)
+        self.__student_service.delete_student_by_id(student_id=student_id)
+        self.update_user_role(user_id=student.user_id, role_name='USER')
