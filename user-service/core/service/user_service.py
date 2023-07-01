@@ -125,10 +125,16 @@ class UserServiceImpl(UserService):
         self.__repository.update_user_role(user_id=user_id, role_id=role.id)
 
     def get_user_by_username(self, username: str) -> User:
-        return self.__repository.get_user_by_username(username=username)
+        user = self.__repository.get_user_by_username(username=username)
+        if user is None:
+            raise IllegalArgumentException(f'User with username "{username}" not exist')
+        return user
 
     def get_user_by_id(self, user_id: int) -> User:
-        return self.__repository.get_user_by_id(user_id=user_id)
+        user = self.__repository.get_user_by_id(user_id=user_id)
+        if user is None:
+            raise IllegalArgumentException(f'User with id {user_id} not exist')
+        return user
 
     def delete_student_by_id(self, student_id: int) -> None:
         student = self.__student_service.get_student_by_id(student_id=student_id)

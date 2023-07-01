@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from ..models.student import Student
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
+from ..exceptions.illegal_argument_exception import IllegalArgumentException
 
 
 class StudentRepository(ABC):
@@ -61,7 +62,9 @@ class StudentRepositoryImpl(StudentRepository):
         self.__session.commit()
 
     def delete_student(self, student_id: int) -> None:
-        student = self.__session.query(Student).filter(Student.id == student_id).one()
+        student = self.__session.query(Student).filter(Student.id == student_id).first()
+        if student is None:
+            raise IllegalArgumentException(f'Student with id {student_id} not exist')
         self.__session.delete(student)
         self.__session.commit()
 
