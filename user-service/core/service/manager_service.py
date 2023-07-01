@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 
 import bcrypt
 
+from ..exceptions.illegal_argument_exception import IllegalArgumentException
 from ..models.manager import Manager
 from ..models.user import User
 from ..repositories.manager_repository import ManagerRepository
@@ -41,7 +42,10 @@ class ManagerServiceImpl(ManagerService):
         self.__repository.delete_manager(user_id=user_id)
 
     def get_manager_by_login(self, login: str) -> Manager:
-        return self.__repository.get_manager_by_login(login=login)
+        manager = self.__repository.get_manager_by_login(login=login)
+        if manager is None:
+            raise IllegalArgumentException(f'Manager with login "{login}" not found')
+        return manager
 
     @staticmethod
     def __generate_password() -> str:

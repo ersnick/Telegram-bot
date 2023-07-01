@@ -19,10 +19,10 @@ class RoleRepositoryImpl(RoleRepository):
 
     def get_role_by_name(self, name: str) -> Role:
         role = self.__session.query(Role).filter(Role.name == name).one()
-        self.__session.close()
+        self.__session.commit()
         return role
 
     def get_role_by_id(self, role_id: int) -> Role:
         role = self.__session.query(Role).filter(Role.id == role_id).one()
-        self.__session.close()
+        self.__session.commit()
         return role

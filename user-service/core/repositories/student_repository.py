@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from core.models.student import Student
+from ..models.student import Student
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -42,11 +42,12 @@ class StudentRepositoryImpl(StudentRepository):
     def save_student(self, student: Student) -> None:
         self.__session.add(student)
         self.__session.commit()
-        self.__session.close()
 
     def get_all_students(self) -> list[Student]:
-        students = self.__session.query(Student).all()
-        self.__session.close()
+        students = self.__session.query(Student)
+        if not students:
+            students = []
+        self.__session.commit()
 
         return students
 
@@ -58,17 +59,15 @@ class StudentRepositoryImpl(StudentRepository):
                                                                                'patronymic': student.patronymic,
                                                                                'group_id': student.group_id})
         self.__session.commit()
-        self.__session.close()
 
     def delete_student(self, student_id: int) -> None:
         student = self.__session.query(Student).filter(Student.id == student_id).one()
         self.__session.delete(student)
         self.__session.commit()
-        self.__session.close()
 
     def get_student_by_id(self, student_id: int) -> Student:
-        student = self.__session.query(Student).filter(Student.id == student_id).one()
-        self.__session.close()
+        student = self.__session.query(Student).filter(Student.id == student_id).first()
+        self.__session.commit()
         return student
 
     def get_students_by_filter(self,
@@ -82,5 +81,11 @@ class StudentRepositoryImpl(StudentRepository):
                         Student.surname.like(f'%{surname}%'),
                         Student.group_id == group_id)).all()
 
-        self.__session.close()
+        if not students:
+            students = []
+        else:
+            students = students
+
+        self.__session.commit()
+
         return students

@@ -32,7 +32,7 @@ def update_group_by_id(group_id: int, group: Group) -> Response:
 
 @router.post('', status_code=201)
 def create_group(group: Group) -> Response:
-    group_service.create_group(group=group)
+    group_service.create_group(new_group=group)
     return Response()
 
 

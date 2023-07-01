@@ -4,6 +4,7 @@ from ..repositories.student_repository import StudentRepository
 from .group_service import GroupService
 from ..models.student import Student
 from ..models.statement import Statement
+from ..exceptions.illegal_argument_exception import IllegalArgumentException
 from abc import ABC, abstractmethod
 
 logger = logging.getLogger()
@@ -63,18 +64,25 @@ class StudentServiceImpl(StudentService):
         self.__repository.delete_student(student_id=student_id)
 
     def get_students_by_filter(self,
-                               name: str = '',
-                               surname: str = '',
-                               patronymic: str = '',
-                               group_name: str = '') -> list[Student]:
-        group = self.__group_service.get_group_by_title(group_name)
-        return self.__repository.get_students_by_filter(name=name,
-                                                        surname=surname,
-                                                        patronymic=patronymic,
-                                                        group_id=group.id)
+                               name: str = None,
+                               surname: str = None,
+                               patronymic: str = None,
+                               group_name: str = None) -> list[Student]:
+        groups = self.__group_service.get_group_by_filter(title=group_name)
+        students: list[Student] = []
+        for group in groups:
+            saved_students = self.__repository.get_students_by_filter(name=name,
+                                                                      surname=surname,
+                                                                      patronymic=patronymic,
+                                                                      group_id=group.id)
+            students.extend(saved_students)
+        return students
 
     def save_student(self, student: Student) -> None:
         self.__repository.save_student(student=student)
 
     def get_student_by_id(self, student_id: int) -> Student:
-        return self.__repository.get_student_by_id(student_id=student_id)
+        student = self.__repository.get_student_by_id(student_id=student_id)
+        if student is None:
+            raise IllegalArgumentException(f'Student with id {student_id} not found')
+        return student

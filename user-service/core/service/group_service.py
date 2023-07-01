@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from ..exceptions.illegal_argument_exception import IllegalArgumentException
 from ..models.group import Group
 from ..repositories.group_repository import GroupRepository
 
@@ -51,10 +52,16 @@ class GroupServiceImpl(GroupService):
         self.__repository.delete_group(group_id=group_id)
 
     def get_group_by_title(self, title: str = '') -> Group:
-        return self.__repository.get_group_by_title(title=title)
+        group = self.__repository.get_group_by_title(title=title)
+        if group is None:
+            raise IllegalArgumentException(f'Group with title "{title}" not found')
+        return group
 
     def get_group_by_filter(self, title: str = '') -> list[Group]:
         return self.__repository.get_group_by_filter(title=title)
 
     def get_group_by_id(self, group_id: int) -> Group:
-        return self.__repository.get_group_by_id(group_id=group_id)
+        group = self.__repository.get_group_by_id(group_id=group_id)
+        if group is None:
+            raise IllegalArgumentException(f'Group with id {group_id} not found')
+        return group

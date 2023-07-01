@@ -36,30 +36,28 @@ class UserRepositoryImpl(UserRepository):
 
     def get_user(self, user_id: int) -> User:
         user = self.__session.query(User).filter(User.id == user_id).one()
-        self.__session.close()
+        self.__session.commit()
         return user
 
     def get_all_user(self) -> list[User]:
         users = self.__session.query(User).all()
-        self.__session.close()
+        self.__session.commit()
         return users
 
     def get_user_by_id(self, user_id: int) -> User:
         user = self.__session.query(User).filter(User.id == user_id).one()
-        self.__session.close()
+        self.__session.commit()
         return user
 
     def get_user_by_username(self, username: str) -> User:
         user = self.__session.query(User).filter(User.login == username).one()
-        self.__session.close()
+        self.__session.commit()
         return user
 
     def save_user(self, user: User) -> None:
         self.__session.add(user)
         self.__session.commit()
-        self.__session.close()
 
     def update_user_role(self, user_id: int, role_id) -> None:
         self.__session.query(User).filter(User.id == user_id).update({'role_id': role_id})
         self.__session.commit()
-        self.__session.close()

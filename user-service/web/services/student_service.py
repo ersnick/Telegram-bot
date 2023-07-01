@@ -61,11 +61,12 @@ class StudentServiceImpl(StudentService):
         saved_students = self.__student_service.get_students_by_filter(group_name=group_name)
         students = []
         for student in saved_students:
+            group = self.__group_service.get_group_by_id(group_id=student.group_id)
             students.append(Student(id=student.id,
                                     name=student.name,
                                     surname=student.surname,
                                     patronymic=student.patronymic,
-                                    group=group_name))
+                                    group=group.title))
         return students
 
     def delete_student_by_id(self, student_id: int) -> None:
