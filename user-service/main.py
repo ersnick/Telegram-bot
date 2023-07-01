@@ -12,6 +12,8 @@ from web.controllers.statement_router import router as statement_router
 from web.controllers.student_router import router as student_router
 from web.controllers.user_routing import router as user_router
 
+logger = logging.getLogger()
+
 app = FastAPI()
 app.include_router(router=user_router, tags=['User router'])
 app.include_router(router=statement_router, tags=['Statement router'])
@@ -30,7 +32,11 @@ def other_exception_handler(request: Request, e: Exception) -> Response:
 
 
 def main():
-    uvicorn.run(app=app, port=8082, reload=False)
+    logger.info('App was start')
+    uvicorn.run(app=app,
+                port=8082,
+                reload=False,
+                host='0.0.0.0')
 
 
 def __config_logger():
@@ -45,5 +51,5 @@ def __config_logger():
 
 if __name__ == '__main__':
     __config_logger()
-    load_dotenv('../.env')
+    load_dotenv('.env')
     main()
