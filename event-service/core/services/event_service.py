@@ -1,3 +1,4 @@
+from ..exceptions.illegal_argument_exception import IllegalArgumentException
 from ..models.event import *
 from ..repositories import event_repository as repository
 
@@ -52,7 +53,19 @@ def create_event(event: EventDTO) -> None:
                       event_time=event.event_time,
                       is_student_event=event.is_student_event,
                       is_group_event=event.is_group_event)
-    repository.create_event(event=new_event)
+    check_event_time(new_event.event_time)
+    saved_event_id = repository.create_event(event=new_event)
+    if new_event.is_student_event:
+        for student in event.students:
+            repository.add_student_to_event(EventStudent(student_id=student, event_id=saved_event_id))
+    if new_event.is_group_event:
+        for group in event.groups:
+            repository.add_group_to_event(EventGroup(group_id=group, event_id=saved_event_id))
+
+
+def check_event_time(event_time: datetime):
+    if event_time < datetime.now():
+        raise IllegalArgumentException('Event must be after than now')
 
 
 def update_event(event: EventDTO) -> None:
@@ -65,6 +78,7 @@ def update_event(event: EventDTO) -> None:
                     event_time=event.event_time,
                     is_student_event=event.is_student_event,
                     is_group_event=event.is_group_event)
+    check_event_time(u_event.event_time)
     update_student_event(event=event)
     update_group_event(event=event)
     repository.update_event(event=u_event)
@@ -99,4 +113,6 @@ def update_group_event(event: EventDTO):
 
 
 def delete_event_by_id(event_id: int) -> None:
+    repository.delete_all_group_from_event(event_id=event_id)
+    repository.delete_all_students_from_event(event_id=event_id)
     repository.delete_event(event_id=event_id)

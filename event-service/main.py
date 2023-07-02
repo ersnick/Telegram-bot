@@ -3,12 +3,24 @@ from logging import INFO
 
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
 
+from core.exceptions.illegal_argument_exception import IllegalArgumentException
 from core.routers.event_router import router as event_router
 
 app = FastAPI()
 app.include_router(router=event_router, tags=['Event router'])
+
+
+@app.exception_handler(IllegalArgumentException)
+def runtime_exception_handler(request: Request, e: IllegalArgumentException) -> Response:
+    return JSONResponse(status_code=400, content={'message': e.message})
+
+
+@app.exception_handler(Exception)
+def other_exception_handler(request: Request, e: Exception) -> Response:
+    return JSONResponse(status_code=500, content={'message': 'server error'})
 
 
 def main():

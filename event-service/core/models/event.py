@@ -1,4 +1,5 @@
 from datetime import datetime, date, time
+from typing import Optional
 
 from pydantic import BaseModel
 from sqlalchemy import Column, INTEGER, VARCHAR, BOOLEAN, DATE, ForeignKey, Table, TIMESTAMP
@@ -37,17 +38,17 @@ class EventStudent(Base):
 
 
 class EventDTO(BaseModel):
-    id: int
+    id: Optional[int]
     title: str
     is_image_exist: bool
-    image_path: str
+    image_path: Optional[str]
     text: str
     has_feedback: bool
     event_time: datetime
     is_student_event: bool
     is_group_event: bool
-    students: list
-    groups: list
+    students: Optional[list]
+    groups: Optional[list]
 
 
 class EventRepeat(Base):

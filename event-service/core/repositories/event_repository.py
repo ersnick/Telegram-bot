@@ -1,4 +1,4 @@
-from sqlalchemy import or_, and_
+from sqlalchemy import and_, insert
 
 from .db.connections import DBConnection, PostgresConnection
 from ..models.event import *
@@ -15,9 +15,17 @@ def get_event_by_id(event_id: int) -> Event:
     return session.query(Event).filter(Event.id == event_id).first()
 
 
-def create_event(event: Event) -> None:
-    session.query(Event).add(event)
+def create_event(event: Event) -> Event:
+    saved_event = session.scalar(insert(Event).values(title=event.title,
+                                                      is_image_exist=event.is_image_exist,
+                                                      image_path=event.image_path,
+                                                      text=event.text,
+                                                      has_feedback=event.has_feedback,
+                                                      event_time=event.event_time,
+                                                      is_student_event=event.is_student_event,
+                                                      is_group_event=event.is_group_event).returning(Event))
     session.commit()
+    return saved_event
 
 
 def update_event(event: Event) -> None:
