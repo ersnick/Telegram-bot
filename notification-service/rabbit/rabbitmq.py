@@ -2,17 +2,20 @@ import json
 import logging
 
 import pika
-from pika.adapters.blocking_connection import BlockingChannel
-from pika.spec import Basic, BasicProperties
-
 from models.notification import Notification
-
+from pika.adapters.blocking_connection import BlockingChannel
+from pika.exchange_type import ExchangeType
+from pika.spec import Basic, BasicProperties
 from service import notification_service as service
 
 logger = logging.getLogger()
 
+QUEUE = 'send-notification'
+EXCHANGE = 'service.notification'
+ROUTING_KEY = 'notification-routing-key'
 
-def callback_1(ch: BlockingChannel, method: Basic.Deliver, properties: BasicProperties, body: bytes):
+
+def callback(ch: BlockingChannel, method: Basic.Deliver, properties: BasicProperties, body: bytes):
     json_body = str(body.decode('utf-8'))
     notification = json.loads(json_body, object_hook=lambda n: Notification(user_id=n['user_id'],
                                                                             chat_id=n['chat_id'],
@@ -26,11 +29,13 @@ def callback_1(ch: BlockingChannel, method: Basic.Deliver, properties: BasicProp
 async def connect_to_broker():
     connection = pika.BlockingConnection()
     channel = connection.channel()
-    channel.exchange_declare(exchange='test.py', exchange_type='topic')
+    channel.exchange_declare(exchange=EXCHANGE, exchange_type=ExchangeType.topic.name)
 
-    channel.queue_declare(queue='test-queue', durable=False)
-    channel.queue_bind(queue='test-queue', exchange='test.py', routing_key='test-routing-key')
-    channel.basic_consume(queue='test-queue', auto_ack=True, on_message_callback=callback_1)
+    channel.queue_declare(queue=QUEUE, durable=True)
+    channel.queue_bind(queue=QUEUE,
+                       exchange=EXCHANGE,
+                       routing_key=ROUTING_KEY)
+    channel.basic_consume(queue=QUEUE, auto_ack=True, on_message_callback=callback)
 
     logger.info('RabbitMQ starts')
 
