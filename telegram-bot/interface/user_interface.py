@@ -19,8 +19,13 @@ def create_statement_inline_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(row_width=2).add(create_statement_btn, help_btn)
 
 
+def help_inline_keyboard() -> InlineKeyboardMarkup:
+    create_statement_btn = InlineKeyboardButton('Подать заявку на добавление', callback_data='create_statement')
+    return InlineKeyboardMarkup(row_width=2).add(create_statement_btn)
+
+
 async def help_message(message: Message):
-    await message.answer(f'Чем могу помочь?')
+    await message.answer(f'Чем могу помочь?', reply_markup=help_inline_keyboard())
 
 
 async def create_statement(message: Message):

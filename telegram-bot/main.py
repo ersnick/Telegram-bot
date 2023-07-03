@@ -11,7 +11,7 @@ logger = logging.getLogger()
 
 
 def __config_logger():
-    file_log = logging.FileHandler('event-service.log')
+    file_log = logging.FileHandler('telegram-bot.log')
     console_log = logging.StreamHandler()
     FORMAT = '[%(levelname)s] %(asctime)s : %(message)s | %(filename)s'
     logging.basicConfig(level=INFO,
@@ -25,6 +25,7 @@ async def main():
     bot = Bot(config['BOT_TOKEN'], validate_token=True, parse_mode="HTML")
     dp = Dispatcher(bot=bot)
     dp.register_message_handler(start_message, commands=['start'])
+    dp.register_message_handler(help_message, commands=['help'])
     dp.register_callback_query_handler(callback_query_statement, lambda call: call.data == 'create_statement')
     dp.register_callback_query_handler(callback_query_help, lambda call: call.data == 'help')
     dp.register_callback_query_handler(callback_query_send_statement, lambda call: call.data == 'send_statement')
