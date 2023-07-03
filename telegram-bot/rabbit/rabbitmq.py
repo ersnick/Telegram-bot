@@ -3,26 +3,20 @@ import logging
 
 import aioamqp
 from aioamqp.channel import Channel
-from models.notification import Notification
+from main import bot
 from pika.exchange_type import ExchangeType
-from service import notification_service as service
 
 logger = logging.getLogger()
 
-QUEUE = 'send-notification'
-EXCHANGE = 'service.notification'
-ROUTING_KEY = 'notification-routing-key'
+QUEUE = 'receive-notification'
+EXCHANGE = 'service.telegram'
+ROUTING_KEY = 'telegram-routing-key'
 
 
 async def callback(channel: Channel, body: bytes, envelope, properties):
     json_body = str(body.decode('utf-8'))
-    notification = json.loads(json_body, object_hook=lambda n: Notification(user_id=n['user_id'],
-                                                                            chat_id=n['chat_id'],
-                                                                            text=n['text'],
-                                                                            title=n['title'],
-                                                                            send_time=n['send_time']))
-
-    service.save_notification(notification=notification)
+    json_message = json.loads(json_body)
+    await bot.send_message(chat_id=json_message['chat_id'], text=json_message['text'])
     await channel.basic_client_ack(delivery_tag=envelope.delivery_tag)
 
 

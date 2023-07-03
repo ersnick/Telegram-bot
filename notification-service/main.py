@@ -38,4 +38,6 @@ async def main():
 if __name__ == '__main__':
     __config_logger()
     load_dotenv('.env')
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
+    loop.run_forever()

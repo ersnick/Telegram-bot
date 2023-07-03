@@ -9,6 +9,7 @@ aio-pika = "*"
 sqlalchemy = "*"
 aioschedule = "*"
 redis = "*"
+aioamqp = "*"
 
 [dev-packages]
 
