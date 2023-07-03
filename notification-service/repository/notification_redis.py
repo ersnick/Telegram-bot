@@ -8,8 +8,11 @@ repository = redis.Redis(host='localhost', port=6379, db=0)
 
 
 def push_event_to_queue(notifications: list[Notification]) -> None:
+    saved = repository.lrange('notifications', start=0, end=-1)
     for notification in notifications:
-        n_json = notification.toJSON()
+        n_json = bytes(notification.toJSON().encode('utf-8'))
+        if n_json in saved:
+            continue
         repository.lpush('notifications', n_json)
 
 
