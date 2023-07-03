@@ -1,7 +1,9 @@
+import asyncio
 import logging
 
 from models.notification import Notification
 from models.notification_db import NotificationDB
+from rabbit import rabbitmq as rabbit
 from repository import notification_redis as redis_repository
 from repository import notification_repository as repository
 
@@ -12,9 +14,9 @@ def check_event_time():
     logger.info('Check sending time nearest events')
     notifications = redis_repository.get_with_now_send_time_notifications()
     for notification in notifications:
-        # Сделать отправку в очередь для отправки сообщения в тг
-        print(
-            f'Send notification to user_id: {notification.user_id}, on chat_id: {notification.chat_id} with title: {notification.title}')
+        asyncio.run(rabbit.send_message(f'{{ "chat_id": {notification.chat_id}, '
+                     f'"text": "{notification.text}", '
+                     f'"title": "{notification.title}" }}'))
 
 
 def check_event_on_next_hour():

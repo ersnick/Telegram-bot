@@ -16,7 +16,9 @@ ROUTING_KEY = 'telegram-routing-key'
 async def callback(channel: Channel, body: bytes, envelope, properties):
     json_body = str(body.decode('utf-8'))
     json_message = json.loads(json_body)
-    await bot.send_message(chat_id=json_message['chat_id'], text=json_message['text'])
+    message_text = f'<b>{json_message["title"]}</b>\n\n {json_message["text"]}'
+    await bot.send_message(chat_id=json_message['chat_id'],
+                           text=message_text)
     await channel.basic_client_ack(delivery_tag=envelope.delivery_tag)
 
 

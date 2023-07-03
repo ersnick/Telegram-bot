@@ -13,6 +13,14 @@ QUEUE = 'send-notification'
 EXCHANGE = 'service.notification'
 ROUTING_KEY = 'notification-routing-key'
 
+channel: Channel
+
+
+async def send_message(message):
+    await channel.publish(message,
+                          exchange_name='service.telegram',
+                          routing_key='telegram-routing-key')
+
 
 async def callback(channel: Channel, body: bytes, envelope, properties):
     json_body = str(body.decode('utf-8'))
@@ -33,6 +41,7 @@ async def connect_to_broker():
         logger.info('Connection closed')
         return
 
+    global channel
     channel = await protocol.channel()
     logger.info('Rabbit starts')
     await channel.exchange_declare(exchange_name=EXCHANGE, type_name=ExchangeType.topic.name)
