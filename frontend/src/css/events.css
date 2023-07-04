@@ -1,0 +1,116 @@
+h1{
+    margin-top: 50px;
+    text-align: left;
+    margin-left: 100px;
+    font-weight: 350;
+}
+
+.recipient{
+    margin-top: 20px;
+    text-align: left;
+    margin-left: 100px;
+    font-weight: 400;
+}
+
+#deleteButton{
+    background-color: #4F73EF;
+    border: 2px solid #355BDE;
+    border-radius: 6px;
+    padding: 8px;
+    color: white;
+    margin-left: 400px;
+    margin-top: 10px;
+}
+
+#upload-btn{
+    all:unset;
+    background-color: #4F73EF;
+    border: 2px solid #355BDE;
+    border-radius: 6px;
+    padding: 8px;
+    color: white;
+    margin-left: 100px;
+    margin-top: 10px;
+    outline: none;
+    border: none;
+}
+
+#sendBtn{
+    background-color: #4F73EF;
+    border: 2px solid #355BDE;
+    border-radius: 6px;
+    padding: 8px;
+    color: white;
+    margin-left: 400px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.inputText{
+    background-color: #fcfcfc;
+    margin-left: 100px;
+    margin-top: 10px;
+    width: 700px;
+    height: 300px;
+    resize: none;
+    padding: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    display: block;
+}
+
+#group{
+    cursor: pointer;
+    margin-left: 100px;
+    margin-top: 15px;
+}
+
+#student{
+    cursor: pointer;
+    margin-left: 100px;
+}
+
+.chooseRecipient{
+    margin-top: 5px;
+    margin-left: 100px;
+}
+
+#checkbox-list {
+    margin-top: 15px;
+    margin-left: 100px;
+    width: 180px;
+    height:150px;
+    overflow:scroll;
+    overflow-x:hidden;
+  }
+#checkbox-list label {
+    display: block;
+    background-color: #F5F5F5;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px 0 4px 0;
+    color: #3B3C3E;
+    font-size: 14px;
+    font-weight: 500;
+    left: -1px;
+    padding: 10px 7px 5px;
+  }
+
+  #checkbox-list-two {
+    margin-top: 15px;
+    margin-left: 270px;
+    width: 200px;
+    height:150px;
+    overflow:scroll;
+    overflow-x:hidden;
+  }
+#checkbox-list-two label {
+    display: block;
+    background-color: #F5F5F5;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px 0 4px 0;
+    color: #3B3C3E;
+    font-size: 14px;
+    font-weight: 500;
+    left: -1px;
+    padding: 10px 7px 5px;
+  }
